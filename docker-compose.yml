@@ -1,11 +1,26 @@
 version: '3.8'
 services:
-  web:
+  itfest_backend_dev:
+    container_name: itfest_dev
     build:
       dockerfile: dockerfile
       context: ./
     ports:
       - 8080:8080
-    env_file: .env
+    env_file:
+      - .env
     volumes:
       - ./:/app
+  postgres:
+    image: postgres
+    container_name: itfest_db_dev
+    ports:
+      - ${DEV_PORT}:${DEV_PORT}
+    environment:
+      - POSTGRES_DB=${DEV_DBNAME}
+      - POSTGRES_USER=${DEV_USERNAME}
+      - POSTGRES_PASSWORD=${DEV_PASSWORD}
+
+volumes:
+  data:
+  

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
 	"itfest-backend-2.0/api"
+	configs "itfest-backend-2.0/configs"
 )
 
 func main() {
-	godotenv.Load()
+	configs.ConnectDB()
 	api.Run()
 }
