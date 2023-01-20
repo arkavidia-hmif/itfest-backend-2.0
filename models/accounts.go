@@ -3,8 +3,8 @@ package models
 import "itfest-backend-2.0/types"
 
 type Accounts struct {
-	id       int64
-	username string
-	password types.EncryptedString
-	role     types.Role
+	Id       int64                 `gorm:"primaryKey"`
+	Username string                `gorm:"not null;unique"`
+	Password types.EncryptedString `gorm:"not null"`
+	Role     types.Role            `gorm:"not null"`
 }

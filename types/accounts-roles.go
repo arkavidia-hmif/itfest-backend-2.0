@@ -7,8 +7,8 @@ import (
 type Role string
 
 const (
-	Admin Role = "admin"
-	User Role = "user"
+	Admin   Role = "admin"
+	User    Role = "user"
 	Startup Role = "startup"
 )
 
@@ -22,5 +22,5 @@ func (role Role) Value() (driver.Value, error) {
 }
 
 func (Role) GormDataType() string {
-	return "role"
+	return "string"
 }

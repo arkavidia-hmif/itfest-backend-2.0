@@ -6,6 +6,8 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"itfest-backend-2.0/models"
 )
 
 var DB *gorm.DB
@@ -28,7 +30,8 @@ func ConnectDB() {
 	if err != nil {
 		panic("Cannot connect database")
 	}
-	DB.AutoMigrate()
+
+	DB.AutoMigrate(&models.Accounts{})
 
 	fmt.Println("Database connected")
 }
