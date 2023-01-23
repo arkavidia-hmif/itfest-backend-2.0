@@ -60,5 +60,5 @@ func (careerInterests CareerInterests) Value() (driver.Value, error) {
 }
 
 func (CareerInterests) GormDataType() string {
-	return "participant_career_interest[]"
+	return "string"
 }

@@ -10,7 +10,7 @@ import (
 	"itfest-backend-2.0/models"
 )
 
-var DB *gorm.DB
+//var DB *gorm.DB
 
 func ConnectDB() {
 	host := os.Getenv("DEV_HOST")
@@ -31,7 +31,18 @@ func ConnectDB() {
 		panic("Cannot connect database")
 	}
 
-	DB.AutoMigrate(&models.Account{}, &models.User{}, &models.Log{}, &models.Profile{})
+	DB.AutoMigrate(
+		&models.User{},
+		&models.Profile{},
+		&models.Merchandise{},
+		&models.Log{},
+		&models.Game{},
+		&models.Clue{},
+	)
+
+	DB.AutoMigrate(
+		&models.Account{},
+	)
 
 	fmt.Println("Database connected")
 }
