@@ -11,6 +11,6 @@ type Profile struct {
 	Email     string
 	BirthDate time.Time
 	Gender    string
-	Interests types.CareerInterest `gorm:"type:string"`
+	Interests types.CareerInterests `gorm:"type:string"`
 	Submitted bool
 }
