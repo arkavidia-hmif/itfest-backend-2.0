@@ -31,7 +31,7 @@ func ConnectDB() {
 		panic("Cannot connect database")
 	}
 
-	DB.AutoMigrate(&models.Accounts{})
+	DB.AutoMigrate(&models.Account{}, &models.User{}, &models.Log{}, &models.Profile{})
 
 	fmt.Println("Database connected")
 }
