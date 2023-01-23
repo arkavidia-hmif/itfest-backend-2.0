@@ -7,10 +7,10 @@ import (
 )
 
 type Profile struct {
-	UserId    string `gorm:"not null"`
+	AccountID int `gorm:"not null"`
 	Email     string
 	BirthDate time.Time
 	Gender    string
-	Interests types.CareerInterest
+	Interests types.CareerInterest `gorm:"type:string"`
 	Submitted bool
 }
