@@ -17,7 +17,4 @@ type Account struct {
 	LogsFrom []Log                 `gorm:"foreignKey:From"`
 	LogsTo   []Log                 `gorm:"foreignKey:To"`
 	Game     Game                  `gorm:"foreignKey:AccountID"`
-	// Log         Log                   `gorm:"foreignKey:From,To;references:ID"`
-	// Merchandise Merchandise           `gorm:"foreignKey:MerchandiseID;references:ID"`
-	// Clue        Clue                  `gorm:"foreignKey:ClueID;references:ID"`
 }
