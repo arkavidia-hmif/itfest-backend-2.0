@@ -17,7 +17,7 @@ func GetUser(c echo.Context) models.Response[models.User] {
 		return response
 	}
 
-	response.Message = "SUCCESS"
+	response.Message = "SUCCESS get user"
 	response.Data = user
 	return response
 }
@@ -27,13 +27,14 @@ func FindUser(c echo.Context) models.Response[models.User] {
 	response := models.Response[models.User]{}
 
 	user := models.User{}
+	// TODO
 	condition := models.User{Usercode: "1234"}
 	if err := db.Where(&condition, &user).Error; err != nil {
 		response.Message = "ERROR find user"
 		return response
 	}
 
-	response.Message = "SUCCESS"
+	response.Message = "SUCCESS get user"
 	response.Data = user
 	return response
 }
