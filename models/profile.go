@@ -7,7 +7,7 @@ import (
 )
 
 type Profile struct {
-	AccountID int `gorm:"not null"`
+	UserID    int `gorm:"not null"`
 	Email     string
 	BirthDate time.Time
 	Gender    string
