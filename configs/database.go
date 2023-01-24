@@ -10,7 +10,7 @@ import (
 	"itfest-backend-2.0/models"
 )
 
-//var DB *gorm.DB
+var DB *gorm.DB
 
 func ConnectDB() {
 	host := os.Getenv("DEV_HOST")
