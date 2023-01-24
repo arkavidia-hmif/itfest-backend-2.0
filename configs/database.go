@@ -32,7 +32,6 @@ func ConnectDB() {
 	}
 
 	DB.AutoMigrate(
-		&models.User{},
 		&models.Profile{},
 		&models.Merchandise{},
 		&models.Log{},
@@ -41,7 +40,7 @@ func ConnectDB() {
 	)
 
 	DB.AutoMigrate(
-		&models.Account{},
+		&models.User{},
 	)
 
 	fmt.Println("Database connected")
