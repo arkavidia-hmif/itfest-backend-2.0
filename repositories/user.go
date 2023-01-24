@@ -1,6 +1,5 @@
 package repositories
 
-// import model "itfest-backend-2.0/models"
 import (
 	"github.com/labstack/echo/v4"
 	"itfest-backend-2.0/configs"

@@ -9,7 +9,6 @@ import (
 
 type userController struct{}
 
-// Add new function here then make new one below.
 type UserController interface {
 	GetUser(c echo.Context) error
 	FindUser(c echo.Context) error
