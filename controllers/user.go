@@ -11,7 +11,7 @@ import (
 
 // TODO: @graceclaudia19
 func GetUserHandler(c echo.Context) error {
-	db := configs.DB
+	db := configs.DB.GetConnection()
 	response := models.Response[string]{}
 
 	request := make(map[string]interface{})

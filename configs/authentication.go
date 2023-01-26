@@ -21,7 +21,6 @@ type AuthConfig struct {
 	once     sync.Once
 }
 
-// Private
 func (authConfig *AuthConfig) lazyInit() {
 	authConfig.once.Do(func() {
 		applicationName := os.Getenv("APPLICATION_NAME")
@@ -40,7 +39,6 @@ func (authConfig *AuthConfig) lazyInit() {
 	})
 }
 
-// Public
 func (authConfig *AuthConfig) GetMetadata() AuthMetadata {
 	authConfig.lazyInit()
 	return authConfig.metadata

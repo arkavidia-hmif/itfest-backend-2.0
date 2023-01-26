@@ -6,6 +6,6 @@ import (
 	"itfest-backend-2.0/middlewares"
 )
 
-func RegisterRoute(e *echo.Echo) {
-	e.POST("/register", controllers.RegisterHandler, middlewares.AuthMiddleware)
+func LoginRoute(e *echo.Echo) {
+	e.POST("/login", controllers.Testing, middlewares.AuthMiddleware)
 }
