@@ -1,27 +1,40 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	repo "itfest-backend-2.0/repositories"
+	"itfest-backend-2.0/configs"
+	"itfest-backend-2.0/models"
 )
 
-type userController struct{}
+// TODO: @graceclaudia19
+func GetUserHandler(c echo.Context) error {
+	db := configs.DB
+	response := models.Response[string]{}
 
-type UserController interface {
-	GetUser(c echo.Context) error
-	FindUser(c echo.Context) error
+	request := make(map[string]interface{})
+	err := json.NewDecoder(c.Request().Body).Decode(&request)
+	if err != nil {
+		response.Message = "ERROR: BAD REQUEST"
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	result := models.User{}
+	usercode := request["ID"].(string)
+	condition := models.User{Usercode: usercode}
+	if err := db.Find(&condition, &result).Error; err != nil {
+		response.Message = "ERROR: USER NOT FOUND"
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	response.Data = result.Name
+	return c.JSON(http.StatusOK, response)
 }
 
-func NewUserController() UserController {
-	return &userController{}
-}
-
-func (*userController) GetUser(c echo.Context) error {
-	return c.JSON(http.StatusOK, repo.GetUser(c))
-}
-
-func (*userController) FindUser(c echo.Context) error {
-	return c.JSON(http.StatusOK, repo.FindUser(c))
+// TODO: @graceclaudia19
+func FindUserHandler(c echo.Context) error {
+	return nil
+	// return c.JSON(http.StatusOK, repo.FindUser(models.User{}))
 }
