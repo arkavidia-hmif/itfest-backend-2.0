@@ -12,7 +12,7 @@ type User struct {
 	Username string                `gorm:"not null;unique"`
 	Password types.EncryptedString `gorm:"not null"`
 	Role     types.Role            `gorm:"not null"`
-	Point    int32                 `gorm:"not null"`
+	Point    uint                  `gorm:"not null"`
 	Profile  Profile               `gorm:"foreignKey:UserID"`
 	LogsFrom []Log                 `gorm:"foreignKey:From"`
 	LogsTo   []Log                 `gorm:"foreignKey:To"`
