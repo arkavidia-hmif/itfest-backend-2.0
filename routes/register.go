@@ -3,9 +3,8 @@ package routes
 import (
 	"github.com/labstack/echo/v4"
 	controllers "itfest-backend-2.0/controllers"
-	"itfest-backend-2.0/middlewares"
 )
 
 func RegisterRoute(e *echo.Echo) {
-	e.POST("/register", controllers.RegisterHandler, middlewares.AuthMiddleware)
+	e.POST("/register", controllers.RegisterHandler)
 }

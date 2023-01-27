@@ -13,7 +13,7 @@ import (
 	"itfest-backend-2.0/types"
 )
 
-type UserRequest struct {
+type RegisterRequeset struct {
 	Username string `json:"username" form:"username" query:"username"`
 	Name     string `json:"name" form:"name" query:"name"`
 	Password string `json:"password" form:"password" query:"password"`
@@ -32,16 +32,12 @@ func generateUserCode() string {
 	return string(codes)
 }
 
-func Testing(c echo.Context) error {
-	return c.JSON(http.StatusOK, "HAI")
-}
-
 func RegisterHandler(c echo.Context) error {
 	db := configs.DB.GetConnection()
 	config := configs.Config.GetMetadata()
 	response := models.Response[string]{}
 
-	request := UserRequest{}
+	request := RegisterRequeset{}
 	if err := c.Bind(&request); err != nil {
 		response.Message = "ERROR: BAD REQUEST"
 		return c.JSON(http.StatusBadRequest, response)
