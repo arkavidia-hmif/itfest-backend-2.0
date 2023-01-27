@@ -13,7 +13,6 @@ func Run() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middlewares.Cors())
-	e.Use()
 
 	routes.LoginRoute(e)
 	routes.RegisterRoute(e)
