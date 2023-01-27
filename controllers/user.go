@@ -1,35 +1,41 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
+	"itfest-backend-2.0/types"
 )
 
-// TODO: @graceclaudia19
+type UserResponse struct {
+	Name     string
+	Username string
+	Usercode string
+	Role     types.Role
+	Point    uint
+}
+
 func GetUserHandler(c echo.Context) error {
 	db := configs.DB.GetConnection()
-	response := models.Response[string]{}
+	response := models.Response[UserResponse]{}
 
-	request := make(map[string]interface{})
-	err := json.NewDecoder(c.Request().Body).Decode(&request)
-	if err != nil {
-		response.Message = "ERROR: BAD REQUEST"
-		return c.JSON(http.StatusBadRequest, response)
-	}
-
+	id := c.Get("id")
 	result := models.User{}
-	usercode := request["ID"].(string)
-	condition := models.User{Usercode: usercode}
-	if err := db.Find(&condition, &result).Error; err != nil {
+	if err := db.First(&result, id).Error; err != nil {
 		response.Message = "ERROR: USER NOT FOUND"
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	response.Data = result.Name
+	response.Message = "SUCCESS"
+	response.Data = UserResponse{
+		Name:     result.Name,
+		Username: result.Username,
+		Usercode: result.Usercode,
+		Role:     result.Role,
+		Point:    result.Point,
+	}
 	return c.JSON(http.StatusOK, response)
 }
 

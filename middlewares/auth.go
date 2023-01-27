@@ -27,8 +27,6 @@ type AuthClaims struct {
 
 func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		fmt.Println("from middleware one")
-
 		config := configs.Config.GetMetadata()
 		response := models.Response[string]{}
 
