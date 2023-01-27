@@ -8,5 +8,5 @@ import (
 
 func UserRoute(e *echo.Echo) {
 	e.GET("/user", controllers.GetUserHandler, middlewares.AuthMiddleware)
-	e.POST("/findUser", controllers.FindUserHandler)
+	e.POST("/findUser", controllers.FindUserHandler, middlewares.AuthMiddleware)
 }
