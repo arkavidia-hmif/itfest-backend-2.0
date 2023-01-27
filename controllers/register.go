@@ -94,7 +94,8 @@ func RegisterHandler(c echo.Context) error {
 			Issuer:    config.ApplicationName,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(config.LoginExpirationDuration)),
 		},
-		ID: newUser.ID,
+		ID:   newUser.ID,
+		Role: user.Role,
 	}
 
 	unsignedAuthToken := jwt.NewWithClaims(config.JWTSigningMethod, authClaims)

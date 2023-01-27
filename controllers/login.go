@@ -51,6 +51,7 @@ func LoginHandler(c echo.Context) error {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(config.LoginExpirationDuration)),
 		},
 		ID: user.ID,
+		Role: user.Role,
 	}
 
 	unsignedAuthToken := jwt.NewWithClaims(config.JWTSigningMethod, authClaims)
