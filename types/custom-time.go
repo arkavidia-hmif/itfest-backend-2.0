@@ -25,3 +25,13 @@ func (t *BirthDate) UnmarshalJSON(data []byte) error {
 	t.Valid = true
 	return nil
 }
+
+func (t BirthDate) MarshalJSON() ([]byte, error) {
+	if !t.Valid {
+		return []byte("null"), nil
+	}
+
+	format := t.Time.Format("\"2006-01-02\"")
+
+	return []byte(format), nil
+}

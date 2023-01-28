@@ -49,7 +49,7 @@ func UpdateProfileHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	if gender := updateProfile.Gender.ValueOrZero(); gender != "male" && gender != "female" {
+	if gender := updateProfile.Gender.String; updateProfile.Gender.Valid && gender != "male" && gender != "female" {
 		response.Message = "ERROR gender should be blank, male, or female"
 		return c.JSON(http.StatusBadRequest, response)
 	}
@@ -64,14 +64,42 @@ func UpdateProfileHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
+	shouldGrantPoint := !profile.Submitted
+
+	//var email null.String
+	//if updateProfile.Email.Valid {
+	//	email = updateProfile.Email
+	//} else {
+	//	email = null.String{}
+	//}
+	//
+	//var gender null.String
+	//if updateProfile.Gender.Valid {
+	//	gender = updateProfile.Gender
+	//} else {
+	//	gender = null.String{}
+	//}
+	//
+	//var birthdate types.BirthDate
+	//if updateProfile.BirthDate.Valid {
+	//	birthdate = updateProfile.BirthDate
+	//} else {
+	//	birthdate = types.BirthDate{}
+	//}
+
 	if err := db.Model(&profile).Where("user_id = ?", profile.UserID).Updates(models.Profile{
 		Email:     updateProfile.Email,
 		BirthDate: updateProfile.BirthDate,
 		Gender:    updateProfile.Gender,
 		Interests: updateProfile.Interests,
+		Submitted: true,
 	}).Error; err != nil {
 		response.Message = "ERROR update profile"
 		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	if shouldGrantPoint {
+		// todo: tambahkan point
 	}
 
 	response.Message = "SUCCESS update profile"
