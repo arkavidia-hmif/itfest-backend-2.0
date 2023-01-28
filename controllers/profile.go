@@ -17,7 +17,7 @@ type ProfileUpdateRequest struct {
 }
 
 func GetProfileHandler(c echo.Context) error {
-	id := c.Get("id").(int)
+	id := c.Get("id").(uint)
 
 	db := configs.DB.GetConnection()
 	profile := models.Profile{}
@@ -49,7 +49,7 @@ func UpdateProfileHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	id := c.Get("id").(int)
+	id := c.Get("id").(uint)
 
 	db := configs.DB.GetConnection()
 	profile := models.Profile{}

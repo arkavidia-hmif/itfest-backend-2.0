@@ -6,7 +6,7 @@ import (
 )
 
 type Profile struct {
-	UserID    int                   `gorm:"not null"`
+	UserID    uint                  `gorm:"not null"`
 	Email     sql.NullString        `gorm:"default:null"`
 	BirthDate sql.NullTime          `gorm:"default:null"`
 	Gender    types.Gender          `gorm:"default:null"`
