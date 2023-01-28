@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"database/sql"
 	"github.com/labstack/echo/v4"
+	"gopkg.in/guregu/null.v4"
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
 	"itfest-backend-2.0/types"
@@ -10,9 +10,9 @@ import (
 )
 
 type ProfileUpdateRequest struct {
-	Email     sql.NullString        `json:"email" validate:"email"`
-	BirthDate sql.NullTime          `json:"birthdate" validate:"datetime"`
-	Gender    types.Gender          `json:"gender"`
+	Email     null.String           `json:"email" validate:"email"`
+	BirthDate types.BirthDate       `json:"birthdate"`
+	Gender    null.String           `json:"gender"`
 	Interests types.CareerInterests `json:"interests"`
 }
 
@@ -49,6 +49,11 @@ func UpdateProfileHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
+	if gender := updateProfile.Gender.ValueOrZero(); gender != "male" && gender != "female" {
+		response.Message = "ERROR gender should be blank, male, or female"
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
 	id := c.Get("id").(uint)
 
 	db := configs.DB.GetConnection()
@@ -59,7 +64,12 @@ func UpdateProfileHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	if err := db.Model(&profile).Updates(updateProfile).Error; err != nil {
+	if err := db.Model(&profile).Where("user_id = ?", profile.UserID).Updates(models.Profile{
+		Email:     updateProfile.Email,
+		BirthDate: updateProfile.BirthDate,
+		Gender:    updateProfile.Gender,
+		Interests: updateProfile.Interests,
+	}).Error; err != nil {
 		response.Message = "ERROR update profile"
 		return c.JSON(http.StatusBadRequest, response)
 	}

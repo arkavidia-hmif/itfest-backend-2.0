@@ -1,15 +1,15 @@
 package models
 
 import (
-	"database/sql"
+	"gopkg.in/guregu/null.v4"
 	"itfest-backend-2.0/types"
 )
 
 type Profile struct {
-	UserID    uint                  `gorm:"not null"`
-	Email     sql.NullString        `gorm:"default:null"`
-	BirthDate sql.NullTime          `gorm:"default:null"`
-	Gender    types.Gender          `gorm:"default:null"`
-	Interests types.CareerInterests `gorm:"type:string;default:''"`
-	Submitted bool                  `gorm:"default:false"`
+	UserID    uint                  `gorm:"not null" json:"user_id"`
+	Email     null.String           `gorm:"default:null" json:"email"`
+	BirthDate types.BirthDate       `gorm:"default:null" json:"birthdate"`
+	Gender    null.String           `gorm:"default:null" json:"gender"`
+	Interests types.CareerInterests `gorm:"type:string;default:''" json:"interests"`
+	Submitted bool                  `gorm:"default:false" json:"submitted"`
 }
