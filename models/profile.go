@@ -1,16 +1,15 @@
 package models
 
 import (
-	"time"
-
+	"database/sql"
 	"itfest-backend-2.0/types"
 )
 
 type Profile struct {
-	UserID    int `gorm:"not null"`
-	Email     string
-	BirthDate time.Time
-	Gender    string
-	Interests types.CareerInterests `gorm:"type:string"`
-	Submitted bool
+	UserID    int                   `gorm:"not null"`
+	Email     sql.NullString        `gorm:"default:null"`
+	BirthDate sql.NullTime          `gorm:"default:null"`
+	Gender    types.Gender          `gorm:"default:null"`
+	Interests types.CareerInterests `gorm:"type:string;default:''"`
+	Submitted bool                  `gorm:"default:false"`
 }
