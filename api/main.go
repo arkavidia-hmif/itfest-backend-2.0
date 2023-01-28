@@ -21,6 +21,7 @@ func Run() {
 	routes.LoginRoute(e)
 	routes.RegisterRoute(e)
 	routes.UserRoute(e)
+	routes.ProfileRoute(e)
 
 	port := "8080"
 	e.Logger.Fatal(e.Start(":" + port))

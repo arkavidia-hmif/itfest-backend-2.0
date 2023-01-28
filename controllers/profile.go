@@ -16,18 +16,7 @@ type ProfileUpdateRequest struct {
 	Interests types.CareerInterests `json:"interests"`
 }
 
-type profileController struct{}
-
-type ProfileController interface {
-	GetProfile(c echo.Context) error
-	UpdateProfile(c echo.Context) error
-}
-
-func NewProfileController() ProfileController {
-	return &profileController{}
-}
-
-func (*profileController) GetProfile(c echo.Context) error {
+func GetProfileHandler(c echo.Context) error {
 	id := c.Get("id").(int)
 
 	db := configs.DB.GetConnection()
@@ -46,7 +35,7 @@ func (*profileController) GetProfile(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func (*profileController) UpdateProfile(c echo.Context) error {
+func UpdateProfileHandler(c echo.Context) error {
 	updateProfile := new(ProfileUpdateRequest)
 	response := models.Response[models.Profile]{}
 
