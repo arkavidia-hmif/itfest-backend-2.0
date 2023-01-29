@@ -1,8 +1,12 @@
 package types
 
 import (
+	"context"
 	"database/sql/driver"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"regexp"
+	"strings"
 )
 
 type CareerInterest string
@@ -56,7 +60,17 @@ func (careerInterests CareerInterests) Value() (driver.Value, error) {
 	for _, careerInterest := range careerInterests {
 		values = append(values, string(careerInterest))
 	}
+
 	return values, nil
+}
+
+func (careerInterests CareerInterests) GormValue(ctx context.Context, db *gorm.DB) clause.Expr {
+	interests, _ := careerInterests.Value()
+
+	return clause.Expr{
+		SQL:  "?",
+		Vars: []interface{}{strings.Join(interests.([]string), " ")},
+	}
 }
 
 func (CareerInterests) GormDataType() string {
