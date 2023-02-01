@@ -5,8 +5,11 @@ import (
 	"gopkg.in/guregu/null.v4"
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
+	"itfest-backend-2.0/services"
 	"itfest-backend-2.0/types"
 	"net/http"
+	"os"
+	"strconv"
 )
 
 type ProfileUpdateRequest struct {
@@ -99,7 +102,17 @@ func UpdateProfileHandler(c echo.Context) error {
 	}
 
 	if shouldGrantPoint {
-		// todo: tambahkan point
+		points, perr := strconv.Atoi(os.Getenv("ADD_PROFILE_POINT"))
+
+		if perr != nil {
+			return perr
+		}
+
+		_, err := services.GrantPoint(id, uint(points))
+
+		if err != nil {
+			return err
+		}
 	}
 
 	response.Message = "SUCCESS update profile"

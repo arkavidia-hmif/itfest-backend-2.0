@@ -22,6 +22,7 @@ func Run() {
 	routes.RegisterRoute(e)
 	routes.UserRoute(e)
 	routes.ProfileRoute(e)
+	routes.PointsRoute(e)
 
 	port := "8080"
 	e.Logger.Fatal(e.Start(":" + port))
