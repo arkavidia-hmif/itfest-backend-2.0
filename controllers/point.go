@@ -39,16 +39,16 @@ func GrantPointHandler(c echo.Context) error {
 	}
 
 	if request.Point > uint(maxGrant) {
-		response.Message = fmt.Sprintf("ERROR: Added point should be less than  %d", maxGrant)
+		response.Message = fmt.Sprintf("ERROR: Added point should be less than %d", maxGrant)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	db := configs.DB.GetConnection()
 
 	user := models.User{}
-	username := request.Usercode
+	usercode := request.Usercode
 
-	if err := db.Where(models.User{Username: username}).Find(&user).Error; err != nil {
+	if err := db.Where(models.User{Usercode: usercode}).First(&user).Error; err != nil {
 		response.Message = "ERROR: INTERNAL SERVER ERROR"
 		return c.JSON(http.StatusInternalServerError, response)
 	}
