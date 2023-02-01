@@ -75,6 +75,13 @@ func RegisterHandler(c echo.Context) error {
 	}
 
 	// Create User
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
 	encryptedString := []byte(request.Password)
 	newUser := models.User{
 		Username: request.Username,
@@ -84,7 +91,8 @@ func RegisterHandler(c echo.Context) error {
 		Role:     types.User,
 		Point:    0,
 	}
-	if err := db.Create(&newUser).Error; err != nil {
+	if err := tx.Create(&newUser).Error; err != nil {
+		tx.Rollback()
 		response.Message = "ERROR: INTERNAL SERVER ERROR"
 		return c.JSON(http.StatusInternalServerError, response)
 	}
@@ -105,6 +113,13 @@ func RegisterHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
+	if err := createGame(newUser.ID); err != nil {
+		tx.Rollback()
+		response.Message = "ERROR: INTERNAL SERVER ERROR"
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	tx.Commit()
 	response.Message = "SUCCESS"
 	response.Data = signedAuthToken
 	return c.JSON(http.StatusCreated, response)
