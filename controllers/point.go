@@ -72,7 +72,7 @@ func GrantPointHandler(c echo.Context) error {
 
 func GetHistoriesHandler(c echo.Context) error {
 	id := c.Get("id").(uint)
-	response := models.Response[GetHistoriesResponse]{}
+	response := models.Response[[]models.Log]{}
 
 	db := configs.DB.GetConnection()
 	logs := []models.Log{}
@@ -82,7 +82,7 @@ func GetHistoriesHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	response.Data = GetHistoriesResponse{Logs: logs}
+	response.Data = logs
 
 	return c.JSON(http.StatusOK, response)
 }
