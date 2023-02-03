@@ -8,4 +8,5 @@ import (
 
 func PointsRoute(e *echo.Echo) {
 	e.POST("/grantPoint", controllers.GrantPointHandler, middlewares.AuthMiddleware)
+	e.GET("/getHistories", controllers.GetHistoriesHandler, middlewares.AuthMiddleware)
 }

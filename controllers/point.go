@@ -2,19 +2,24 @@ package controllers
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
 	"itfest-backend-2.0/services"
 	"itfest-backend-2.0/types"
-	"net/http"
-	"os"
-	"strconv"
 )
 
 type GrantPointRequest struct {
 	Usercode string `json:"usercode" form:"usercode" query:"usercode"`
 	Point    uint   `json:"point" form:"point" query:"point"`
+}
+
+type GetHistoriesResponse struct {
+	Logs []models.Log `json:"logs"`
 }
 
 func GrantPointHandler(c echo.Context) error {
@@ -61,6 +66,23 @@ func GrantPointHandler(c echo.Context) error {
 	}
 
 	response.Data = GrantPointRequest{Usercode: request.Usercode, Point: user.Point}
+
+	return c.JSON(http.StatusOK, response)
+}
+
+func GetHistoriesHandler(c echo.Context) error {
+	id := c.Get("id").(uint)
+	response := models.Response[GetHistoriesResponse]{}
+
+	db := configs.DB.GetConnection()
+	logs := []models.Log{}
+
+	if err := db.Where("from = ? OR to = ?", id, id).Find(&logs).Error; err != nil {
+		response.Message = "ERROR: FAILED TO QUERY POINT LOGS"
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response.Data = GetHistoriesResponse{Logs: logs}
 
 	return c.JSON(http.StatusOK, response)
 }
