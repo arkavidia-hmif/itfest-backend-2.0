@@ -7,4 +7,24 @@ Content-Type: application/json
   "password" : "itfest"
 }
 
+###
 
+POST http://localhost:8080/register
+Content-Type: application/json
+
+{
+  "name" : "itfest user",
+  "username" : "itfest-user",
+  "password" : "itfest-user"
+}
+
+###
+
+POST http://localhost:8080/register
+Content-Type: application/json
+
+{
+  "name" : "itfest admin",
+  "username" : "itfest-admin",
+  "password" : "itfest-admin"
+}

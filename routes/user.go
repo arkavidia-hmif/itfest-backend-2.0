@@ -9,4 +9,7 @@ import (
 func UserRoute(e *echo.Echo) {
 	e.GET("/user", controllers.GetUserHandler, middlewares.AuthMiddleware)
 	e.POST("/findUser", controllers.FindUserHandler, middlewares.AuthMiddleware)
+
+	// CLUE FOR GAME 
+	e.GET("/getTries", controllers.GetTriesHandler, middlewares.AuthMiddleware)
 }
