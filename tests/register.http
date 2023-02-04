@@ -1,4 +1,4 @@
-POST http://localhost:8080/register
+POST https://itfest-dev.onrender.com/register
 Content-Type: application/json
 
 {
