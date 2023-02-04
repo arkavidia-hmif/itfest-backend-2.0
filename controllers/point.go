@@ -23,6 +23,7 @@ type GetHistoriesResponse struct {
 }
 
 func GrantPointHandler(c echo.Context) error {
+	id := c.Get("id").(uint)
 	role := c.Get("role").(types.Role)
 	response := models.Response[GrantPointRequest]{}
 
@@ -54,11 +55,11 @@ func GrantPointHandler(c echo.Context) error {
 	usercode := request.Usercode
 
 	if err := db.Where(models.User{Usercode: usercode}).First(&user).Error; err != nil {
-		response.Message = "ERROR: INTERNAL SERVER ERROR"
-		return c.JSON(http.StatusInternalServerError, response)
+		response.Message = "ERROR: User Not Found"
+		return c.JSON(http.StatusNotFound, response)
 	}
 
-	user, grantErr := services.GrantPoint(user.ID, request.Point)
+	user, grantErr := services.GrantPoint(id, user.ID, request.Point)
 
 	if grantErr != nil {
 		response.Message = err.Error()

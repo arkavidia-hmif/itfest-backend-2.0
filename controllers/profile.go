@@ -69,27 +69,6 @@ func UpdateProfileHandler(c echo.Context) error {
 
 	shouldGrantPoint := !profile.Submitted
 
-	//var email null.String
-	//if updateProfile.Email.Valid {
-	//	email = updateProfile.Email
-	//} else {
-	//	email = null.String{}
-	//}
-	//
-	//var gender null.String
-	//if updateProfile.Gender.Valid {
-	//	gender = updateProfile.Gender
-	//} else {
-	//	gender = null.String{}
-	//}
-	//
-	//var birthdate types.BirthDate
-	//if updateProfile.BirthDate.Valid {
-	//	birthdate = updateProfile.BirthDate
-	//} else {
-	//	birthdate = types.BirthDate{}
-	//}
-
 	if err := db.Model(&profile).Where("user_id = ?", profile.UserID).Updates(models.Profile{
 		Email:     updateProfile.Email,
 		BirthDate: updateProfile.BirthDate,
@@ -108,7 +87,13 @@ func UpdateProfileHandler(c echo.Context) error {
 			return perr
 		}
 
-		_, err := services.GrantPoint(id, uint(points))
+		admin := models.User{}
+
+		if err := db.Where(models.User{Role: types.Admin}).First(&admin).Error; err != nil {
+			return err
+		}
+
+		_, err := services.GrantPoint(admin.ID, id, uint(points))
 
 		if err != nil {
 			return err

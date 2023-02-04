@@ -15,6 +15,6 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "usercode" : "854649",
+  "usercode" : "307691",
   "point": 200
 }
