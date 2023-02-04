@@ -43,7 +43,6 @@ func GetUserHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// TODO: @graceclaudia19
 func FindUserHandler(c echo.Context) error {
 	db := configs.DB.GetConnection()
 	response := models.Response[UserResponse]{}
@@ -75,5 +74,22 @@ func FindUserHandler(c echo.Context) error {
 		Role:     result.Role,
 		Point:    result.Point,
 	}
+	return c.JSON(http.StatusOK, response)
+}
+
+func GetTriesHandler(c echo.Context) error {
+	db := configs.DB.GetConnection()
+	response := models.Response[uint]{}
+
+	userID := c.Get("id").(uint)
+	result := models.Game{}
+	condition := models.Game{UserID: userID}
+	if err := db.Where(&condition).Find(&result).Error; err != nil {
+		response.Message = "ERROR: INTERNAL SERVER ERROR"
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response.Message = "SUCCESS"
+	response.Data = result.RemainingTries
 	return c.JSON(http.StatusOK, response)
 }
