@@ -2,8 +2,8 @@ POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-  "username" : "itfest",
-  "password" : "itfest"
+  "username" : "itfest-user",
+  "password" : "itfest-user"
 }
 
 > {% client.global.set("auth_token", response.body.data); %}

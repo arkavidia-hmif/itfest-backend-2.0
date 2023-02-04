@@ -5,8 +5,11 @@ import (
 	"gopkg.in/guregu/null.v4"
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
+	"itfest-backend-2.0/services"
 	"itfest-backend-2.0/types"
 	"net/http"
+	"os"
+	"strconv"
 )
 
 type ProfileUpdateRequest struct {
@@ -66,27 +69,6 @@ func UpdateProfileHandler(c echo.Context) error {
 
 	shouldGrantPoint := !profile.Submitted
 
-	//var email null.String
-	//if updateProfile.Email.Valid {
-	//	email = updateProfile.Email
-	//} else {
-	//	email = null.String{}
-	//}
-	//
-	//var gender null.String
-	//if updateProfile.Gender.Valid {
-	//	gender = updateProfile.Gender
-	//} else {
-	//	gender = null.String{}
-	//}
-	//
-	//var birthdate types.BirthDate
-	//if updateProfile.BirthDate.Valid {
-	//	birthdate = updateProfile.BirthDate
-	//} else {
-	//	birthdate = types.BirthDate{}
-	//}
-
 	if err := db.Model(&profile).Where("user_id = ?", profile.UserID).Updates(models.Profile{
 		Email:     updateProfile.Email,
 		BirthDate: updateProfile.BirthDate,
@@ -99,7 +81,23 @@ func UpdateProfileHandler(c echo.Context) error {
 	}
 
 	if shouldGrantPoint {
-		// todo: tambahkan point
+		points, perr := strconv.Atoi(os.Getenv("ADD_PROFILE_POINT"))
+
+		if perr != nil {
+			return perr
+		}
+
+		admin := models.User{}
+
+		if err := db.Where(models.User{Role: types.Admin}).First(&admin).Error; err != nil {
+			return err
+		}
+
+		_, err := services.GrantPoint(admin.ID, id, uint(points))
+
+		if err != nil {
+			return err
+		}
 	}
 
 	response.Message = "SUCCESS update profile"
