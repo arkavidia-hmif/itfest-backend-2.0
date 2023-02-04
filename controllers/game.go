@@ -10,7 +10,7 @@ func createGame(id uint) error {
 
 	newGame := models.Game{
 		UserID:         id,
-		CurrentClueId:  0,
+		CurrentClueId:  getRandomClueId(),
 		RemainingTries: 3,
 	}
 	if err := db.Create(&newGame).Error; err != nil {

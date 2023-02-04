@@ -1,3 +1,15 @@
 GET http://localhost:8080/getClue
 Accept: application/json
-Authorization: Bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1MjI4NDgwLCJpZCI6Nywicm9sZSI6InVzZXIifQ.ObehVMi-eFY-mU5gc7RbmO4pjPnuWGHiCDkeL2KrsKA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1MjQwMTcxLCJpZCI6MTIsInJvbGUiOiJhZG1pbiJ9.5iLTuHxcpc-ZtjU7yhbofWbLcqKAn6qBK6yBhM2Lf1E
+
+### 
+
+POST http://localhost:8080/createClue
+Accept: application/json
+Authorization: Bearer {{}}
+Content-Type: application/json
+
+{
+    "usercode" : "526538",
+    "text": "lorem ipsum"
+}
