@@ -85,19 +85,20 @@ func UpdateProfileHandler(c echo.Context) error {
 		points, perr := strconv.Atoi(os.Getenv("ADD_PROFILE_POINT"))
 
 		if perr != nil {
-			return perr
+			response.Message = perr.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 
 		admin := models.User{}
-
 		if err := db.Where(models.User{Role: types.Admin}).First(&admin).Error; err != nil {
-			return err
+			response.Message = err.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 
 		_, err := services.GrantPoint(admin.ID, id, uint(points))
-
 		if err != nil {
-			return err
+			response.Message = err.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 	}
 

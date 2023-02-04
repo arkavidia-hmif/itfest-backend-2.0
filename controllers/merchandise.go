@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
 	"itfest-backend-2.0/types"
-	"net/http"
 )
 
 type AddMerchandiseRequest struct {
@@ -20,8 +21,8 @@ type MerchandiseOrder struct {
 }
 
 type CheckoutRequest struct {
-	To      uint               `json:"to" form:"to" query:"to"`
-	Payload []MerchandiseOrder `json:"payload" form:"payload" query:"payload"`
+	To      string             `form:"to"`
+	Payload []MerchandiseOrder `form:"payload[]"`
 }
 
 func AddMerchandiseHandler(c echo.Context) error {
@@ -106,16 +107,25 @@ func CheckoutHandler(c echo.Context) error {
 
 	// Validating Request Body
 	request := CheckoutRequest{}
+	// form, err := c.FormParams()
+
+	// if err != nil {
+	// 	response.Message = "ERROR: BAD REQUEST 1"
+	// 	return c.JSON(http.StatusBadRequest, response)
+	// }
 	if err := c.Bind(&request); err != nil {
-		response.Message = "ERROR: BAD REQUEST"
+		response.Message = "ERROR: BAD REQUEST 222"
 		return c.JSON(http.StatusBadRequest, response)
 	}
+	// dec := formam.NewDecoder(&formam.DecoderOptions{TagName: "formam"})
+	// dec.Decode(form, &request)
 
 	db := configs.DB.GetConnection()
 
 	// Get User Point
 	user := models.User{}
-	if err := db.First(&user, request.To).Error; err != nil {
+	condition := models.User{Usercode: request.To}
+	if err := db.Where(&condition).Find(&user).Error; err != nil {
 		response.Message = "ERROR: BAD REQUEST"
 		return c.JSON(http.StatusBadRequest, response)
 	}
@@ -141,8 +151,16 @@ func CheckoutHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
 	// Update User Point
-	if err := db.Model(&user).Where("id = ?", user.ID).Update("point", user.Point-totalMerchPoint).Error; err != nil {
+	if err := tx.Model(&user).Where("id = ?", user.ID).Update("point", user.Point-totalMerchPoint).Error; err != nil {
+		tx.Rollback()
 		response.Message = "ERROR: FAILED TO UPDATE POINT"
 		return c.JSON(http.StatusInternalServerError, response)
 	}
@@ -150,17 +168,35 @@ func CheckoutHandler(c echo.Context) error {
 	// Update Merch Stock
 	for _, order := range request.Payload {
 		merch := models.Merchandise{}
-		if err := db.First(&merch, order.MerchantID).Error; err != nil {
+		if err := tx.First(&merch, order.MerchantID).Error; err != nil {
+			tx.Rollback()
 			response.Message = "ERROR: BAD REQUEST"
 			return c.JSON(http.StatusBadRequest, response)
 		}
 
-		if err := db.Model(&merch).Where("id = ?", merch.ID).Update("stock", merch.Stock-order.Quantity).Error; err != nil {
+		if err := tx.Model(&merch).Where("id = ?", merch.ID).Update("stock", merch.Stock-order.Quantity).Error; err != nil {
+			tx.Rollback()
 			response.Message = "ERROR: FAILED TO UPDATE STOCK"
 			return c.JSON(http.StatusInternalServerError, response)
 		}
 	}
 
-	response.Message = "Success"
+	adminId := c.Get("id").(uint)
+	userId := user.ID
+
+	log := models.Log{
+		From:  userId,
+		To:    adminId,
+		Point: totalMerchPoint,
+	}
+
+	if err := tx.Create(&log).Error; err != nil {
+		tx.Rollback()
+		response.Message = "ERROR: FAILED TO CREATE LOG"
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	tx.Commit()
+	response.Message = "SUCCESS"
 	return c.JSON(http.StatusOK, response)
 }

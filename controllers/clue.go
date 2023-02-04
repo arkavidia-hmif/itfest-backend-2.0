@@ -18,13 +18,13 @@ type CreateClueRequest struct {
 }
 
 type SubmitClueRequest struct {
-	ID   string `json:"id" form:"id" query:"id"`
 	Code string `json:"code" form:"code" query:"code"`
 }
 
 type ClueResponse struct {
-	ID   uint   `json:"id"`
-	Text string `json:"text"`
+	ID             uint   `json:"id"`
+	Clue           string `json:"text"`
+	RemainingTries uint   `json:"remaining_tries"`
 }
 
 func GetTriesHandler(c echo.Context) error {
@@ -87,6 +87,12 @@ func ClueHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
+	// if game already done
+	if game.CurrentClueId == 9999 {
+		response.Message = "SUCCESS: GAME IS DONE!"
+		return c.JSON(http.StatusOK, response)
+	}
+
 	result := models.Clue{}
 	clueId := game.CurrentClueId
 	if err := db.First(&result, clueId).Error; err != nil {
@@ -96,8 +102,9 @@ func ClueHandler(c echo.Context) error {
 
 	response.Message = "SUCCESS"
 	response.Data = ClueResponse{
-		ID:   result.ID,
-		Text: result.Text,
+		ID:             result.ID,
+		Clue:           result.Text,
+		RemainingTries: game.RemainingTries,
 	}
 	return c.JSON(http.StatusOK, response)
 }
@@ -114,41 +121,71 @@ func SubmitClueHandler(c echo.Context) error {
 	}
 
 	game := models.Game{}
-	if err := db.First(&game, request.ID).Error; err != nil {
-		response.Message = "ERROR: INTERNAL SERVER ERROR"
+	if err := db.Where(&models.Game{UserID: id}).Find(&game).Error; err != nil {
+		response.Message = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	// if game already done
+	if game.CurrentClueId == 9999 {
+		response.Message = "SUCCESS: GAME IS DONE!"
+		return c.JSON(http.StatusOK, response)
 	}
 
 	clue := models.Clue{}
 	if err := db.First(&clue, game.CurrentClueId).Error; err != nil {
-		response.Message = "ERROR: INTERNAL SERVER ERROR"
+		response.Message = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
 	// if code is true
 	if request.Code == clue.Usercode {
-		points, perr := strconv.Atoi(os.Getenv("CLUE_SUCCESS_POINT"))
-
-		if perr != nil {
-			return perr
+		if err := services.NewGame(game); err != nil {
+			response.Message = err.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 
 		admin := models.User{}
 		if err := db.Where(models.User{Role: types.Admin}).First(&admin).Error; err != nil {
-			return err
+			response.Message = err.Error()
+			return c.JSON(http.StatusInternalServerError, response)
+		}
+
+		points, perr := strconv.Atoi(os.Getenv("CLUE_SUCCESS_POINT"))
+		if perr != nil {
+			response.Message = perr.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 
 		_, err := services.GrantPoint(admin.ID, id, uint(points))
 		if err != nil {
-			return err
+			response.Message = err.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 
-		
+		response.Message = "SUCCESS: ANSWER IS CORRECT"
+		return c.JSON(http.StatusOK, response)
 	}
 
+	// if code is wrong and remaining tries is 1
 	if game.RemainingTries == 1 {
+		if err := services.NewGame(game); err != nil {
+			response.Message = err.Error()
+			return c.JSON(http.StatusInternalServerError, response)
+		}
 
+		response.Message = "SUCCESS: TRIED 3 TIMES"
+		return c.JSON(http.StatusOK, response)
 	}
 
-	return c.JSON(http.StatusOK, "hi")
+	// code is wrong, reduce try -1
+	if err := db.First(&models.Game{}, game.ID).Updates(models.Game{
+		RemainingTries: game.RemainingTries - 1,
+	}).Error; err != nil {
+		response.Message = err.Error()
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response.Message = "SUCCESS: ANSWER IS WRONG"
+	return c.JSON(http.StatusOK, response)
 }
