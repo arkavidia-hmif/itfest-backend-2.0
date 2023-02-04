@@ -1,16 +1,16 @@
 version: '3.8'
 services:
-  itfest_backend_dev:
-    container_name: itfest_dev
-    build:
-      dockerfile: dockerfile
-      context: ./
-    ports:
-      - 8080:8080
-    env_file:
-      - .env
-    volumes:
-      - ./:/app
+  # itfest_backend_dev:
+  #   container_name: itfest_dev
+  #   build:
+  #     dockerfile: dockerfile
+  #     context: ./
+  #   ports:
+  #     - 8080:8080
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./:/app
   postgres:
     image: postgres
     container_name: itfest_db_dev

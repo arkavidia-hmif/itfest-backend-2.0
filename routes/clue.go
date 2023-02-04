@@ -7,6 +7,7 @@ import (
 )
 
 func ClueRoute(e *echo.Echo) {
+	e.GET("/getTries", controllers.GetTriesHandler, middlewares.AuthMiddleware)
 	e.GET("/getClue", controllers.ClueHandler, middlewares.AuthMiddleware)
 	e.POST("/submitClue", controllers.SubmitClueHandler, middlewares.AuthMiddleware)
 	e.POST("/createClue", controllers.CreateClueHandler, middlewares.AuthMiddleware)

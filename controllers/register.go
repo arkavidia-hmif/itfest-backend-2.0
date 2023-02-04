@@ -10,6 +10,7 @@ import (
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/middlewares"
 	"itfest-backend-2.0/models"
+	"itfest-backend-2.0/services"
 	"itfest-backend-2.0/types"
 )
 
@@ -113,7 +114,7 @@ func RegisterHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	if err := createGame(newUser.ID); err != nil {
+	if err := services.CreateGame(newUser.ID); err != nil {
 		tx.Rollback()
 		response.Message = "ERROR: INTERNAL SERVER ERROR"
 		return c.JSON(http.StatusInternalServerError, response)

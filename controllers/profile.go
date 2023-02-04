@@ -1,15 +1,16 @@
 package controllers
 
 import (
+	"net/http"
+	"os"
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 	"gopkg.in/guregu/null.v4"
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
 	"itfest-backend-2.0/services"
 	"itfest-backend-2.0/types"
-	"net/http"
-	"os"
-	"strconv"
 )
 
 type ProfileUpdateRequest struct {

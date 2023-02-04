@@ -1,16 +1,28 @@
-package controllers
+package services
 
 import (
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
 )
 
-func createGame(id uint) error {
+func NewGame(gid uint) (string, error) {
+	// db := configs.DB.GetConnection()
+
+
+	return "success", nil
+}
+
+func CreateGame(id uint) error {
 	db := configs.DB.GetConnection()
+
+	clueId, err := GetRandomClueId([]uint{})
+	if err != nil {
+		return err
+	}
 
 	newGame := models.Game{
 		UserID:         id,
-		CurrentClueId:  getRandomClueId(),
+		CurrentClueId:  clueId,
 		RemainingTries: 3,
 	}
 	if err := db.Create(&newGame).Error; err != nil {
