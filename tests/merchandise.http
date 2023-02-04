@@ -42,9 +42,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtM
 {
   "to": "022834",
   "payload": [
-    {
-        "merch_id": 1,
-        "quantity": 1
-    },
+    { "merch_id": 1,
+      "quantity": 1 }
   ]
 }

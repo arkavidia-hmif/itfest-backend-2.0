@@ -21,8 +21,8 @@ type MerchandiseOrder struct {
 }
 
 type CheckoutRequest struct {
-	To      string             `form:"to"`
-	Payload []MerchandiseOrder `form:"payload[]"`
+	To      string             `json:"to" form:"to"`
+	Payload []MerchandiseOrder `json:"payload" form:"payload" binding:"dive"`
 }
 
 func AddMerchandiseHandler(c echo.Context) error {
@@ -98,7 +98,7 @@ func GetMerchandiseHandler(c echo.Context) error {
 
 func CheckoutHandler(c echo.Context) error {
 	role := c.Get("role").(types.Role)
-	response := models.Response[string]{}
+	response := models.Response[[]models.Merchandise]{}
 
 	if role != types.Admin {
 		response.Message = "FORBIDDEN"
@@ -107,26 +107,18 @@ func CheckoutHandler(c echo.Context) error {
 
 	// Validating Request Body
 	request := CheckoutRequest{}
-	// form, err := c.FormParams()
 
-	// if err != nil {
-	// 	response.Message = "ERROR: BAD REQUEST 1"
-	// 	return c.JSON(http.StatusBadRequest, response)
-	// }
 	if err := c.Bind(&request); err != nil {
-		response.Message = "ERROR: BAD REQUEST 222"
+		response.Message = "ERROR: BAD REQUEST"
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	// dec := formam.NewDecoder(&formam.DecoderOptions{TagName: "formam"})
-	// dec.Decode(form, &request)
-
 	db := configs.DB.GetConnection()
 
 	// Get User Point
 	user := models.User{}
 	condition := models.User{Usercode: request.To}
 	if err := db.Where(&condition).Find(&user).Error; err != nil {
-		response.Message = "ERROR: BAD REQUEST"
+		response.Message = "ERROR: USERCODE NOT FOUND"
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
@@ -166,6 +158,7 @@ func CheckoutHandler(c echo.Context) error {
 	}
 
 	// Update Merch Stock
+	data := []models.Merchandise{}
 	for _, order := range request.Payload {
 		merch := models.Merchandise{}
 		if err := tx.First(&merch, order.MerchantID).Error; err != nil {
@@ -173,6 +166,8 @@ func CheckoutHandler(c echo.Context) error {
 			response.Message = "ERROR: BAD REQUEST"
 			return c.JSON(http.StatusBadRequest, response)
 		}
+
+		data = append(data, merch)
 
 		if err := tx.Model(&merch).Where("id = ?", merch.ID).Update("stock", merch.Stock-order.Quantity).Error; err != nil {
 			tx.Rollback()
@@ -197,6 +192,7 @@ func CheckoutHandler(c echo.Context) error {
 	}
 
 	tx.Commit()
-	response.Message = "SUCCESS"
+	response.Message = "SUCCESS: CHECKOUT"
+	response.Data = data
 	return c.JSON(http.StatusOK, response)
 }
