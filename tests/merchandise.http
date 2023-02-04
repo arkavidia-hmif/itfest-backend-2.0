@@ -12,10 +12,37 @@ Content-Type: application/json
 
 POST http://localhost:8080/addMerchandise
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM3ODMyLCJpZCI6Mywicm9sZSI6ImFkbWluIn0.4KBB9wrZQ8Va1T17b2VJdKBjieRYbCDRnjBPyjGLYZw
 
 {
-  "name": "Tumblr Arkavidia",
+  "name": "Jaket Arkavidia",
   "stock": 10,
   "point": 2000
+}
+
+###
+
+GET http://localhost:8080/getAllMerchandise
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM2MzQyLCJpZCI6MTUsInJvbGUiOiJ1c2VyIn0.WeFUXrO88Ag8LHHSFxHSmPtKi4Hc6w5nGSlMj6x1S0s
+
+###
+
+GET http://localhost:8080/getMerchandise/id=1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM2MzQyLCJpZCI6MTUsInJvbGUiOiJ1c2VyIn0.WeFUXrO88Ag8LHHSFxHSmPtKi4Hc6w5nGSlMj6x1S0s
+
+
+###
+
+POST http://localhost:8080/checkout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM3ODMyLCJpZCI6Mywicm9sZSI6ImFkbWluIn0.4KBB9wrZQ8Va1T17b2VJdKBjieRYbCDRnjBPyjGLYZw
+
+{
+  "to": "022834",
+  "payload": [
+    { "merch_id": 1,
+      "quantity": 1 }
+  ]
 }

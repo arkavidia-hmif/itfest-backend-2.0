@@ -22,6 +22,7 @@ func Run() {
 	routes.RegisterRoute(e)
 	routes.UserRoute(e)
 	routes.ProfileRoute(e)
+	routes.ClueRoute(e)
 	routes.PointsRoute(e)
 	routes.MerchandiseRoute(e)
 

@@ -12,13 +12,13 @@ Content-Type: application/json
 
 GET http://localhost:8080/profile
 Accept: application/json
-Authorization: Bearer {{auth_token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTIxMjMzLCJpZCI6MSwicm9sZSI6InVzZXIifQ.5aq6S-XsOURflfC-DgpqpJEJuNkX3oeMCOJkiTGJSI8
 
 ###
 
 POST http://localhost:8080/profile
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTIxMjMzLCJpZCI6MSwicm9sZSI6InVzZXIifQ.5aq6S-XsOURflfC-DgpqpJEJuNkX3oeMCOJkiTGJSI8
 
 {
   "email": "itfest@arkavidia.com",

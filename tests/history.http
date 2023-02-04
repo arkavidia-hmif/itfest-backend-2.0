@@ -1,0 +1,3 @@
+GET http://localhost:8080/getHistories
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTIxOTAwLCJpZCI6MSwicm9sZSI6InVzZXIifQ.5E2BQW3sK69EJzLjCTGNmLItKcpjZylDYV3renZvpe4

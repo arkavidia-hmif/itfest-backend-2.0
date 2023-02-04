@@ -18,10 +18,6 @@ type GrantPointRequest struct {
 	Point    uint   `json:"point" form:"point" query:"point"`
 }
 
-type GetHistoriesResponse struct {
-	Logs []models.Log `json:"logs"`
-}
-
 func GrantPointHandler(c echo.Context) error {
 	id := c.Get("id").(uint)
 	role := c.Get("role").(types.Role)
@@ -78,12 +74,12 @@ func GetHistoriesHandler(c echo.Context) error {
 	db := configs.DB.GetConnection()
 	logs := []models.Log{}
 
-	if err := db.Where("from = ? OR to = ?", id, id).Find(&logs).Error; err != nil {
+	if err := db.Where(models.Log{From: id}).Or(models.Log{To: id}).Find(&logs).Error; err != nil {
 		response.Message = "ERROR: FAILED TO QUERY POINT LOGS"
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
+	response.Message = "SUCCESS"
 	response.Data = logs
-
 	return c.JSON(http.StatusOK, response)
 }

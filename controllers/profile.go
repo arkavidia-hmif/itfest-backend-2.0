@@ -1,15 +1,16 @@
 package controllers
 
 import (
+	"net/http"
+	"os"
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 	"gopkg.in/guregu/null.v4"
 	"itfest-backend-2.0/configs"
 	"itfest-backend-2.0/models"
 	"itfest-backend-2.0/services"
 	"itfest-backend-2.0/types"
-	"net/http"
-	"os"
-	"strconv"
 )
 
 type ProfileUpdateRequest struct {
@@ -84,19 +85,20 @@ func UpdateProfileHandler(c echo.Context) error {
 		points, perr := strconv.Atoi(os.Getenv("ADD_PROFILE_POINT"))
 
 		if perr != nil {
-			return perr
+			response.Message = perr.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 
 		admin := models.User{}
-
 		if err := db.Where(models.User{Role: types.Admin}).First(&admin).Error; err != nil {
-			return err
+			response.Message = err.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 
 		_, err := services.GrantPoint(admin.ID, id, uint(points))
-
 		if err != nil {
-			return err
+			response.Message = err.Error()
+			return c.JSON(http.StatusInternalServerError, response)
 		}
 	}
 
