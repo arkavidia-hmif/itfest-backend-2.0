@@ -180,9 +180,9 @@ func CheckoutHandler(c echo.Context) error {
 	userId := user.ID
 
 	log := models.Log{
-		From:  userId,
-		To:    adminId,
-		Point: totalMerchPoint,
+		FromId: userId,
+		ToId:   adminId,
+		Point:  totalMerchPoint,
 	}
 
 	if err := tx.Create(&log).Error; err != nil {

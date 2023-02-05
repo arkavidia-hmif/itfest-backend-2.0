@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"gorm.io/gorm"
 	"net/http"
 	"os"
 	"strconv"
@@ -72,9 +73,18 @@ func GetHistoriesHandler(c echo.Context) error {
 	response := models.Response[[]models.Log]{}
 
 	db := configs.DB.GetConnection()
-	logs := []models.Log{}
+	var logs []models.Log
 
-	if err := db.Where(models.Log{From: id}).Or(models.Log{To: id}).Find(&logs).Error; err != nil {
+	err := db.Debug().Where(models.Log{FromId: id}).Or(models.Log{ToId: id}).
+		Preload("From", func(d *gorm.DB) *gorm.DB {
+			return d.Select("Name", "Usercode", "ID")
+		}).
+		Preload("To", func(d *gorm.DB) *gorm.DB {
+			return d.Select("Name", "Usercode", "ID")
+		}).
+		Find(&logs).Error
+
+	if err != nil {
 		response.Message = "ERROR: FAILED TO QUERY POINT LOGS"
 		return c.JSON(http.StatusInternalServerError, response)
 	}
