@@ -13,8 +13,4 @@ type User struct {
 	Password types.EncryptedString `gorm:"not null"`
 	Role     types.Role            `gorm:"not null"`
 	Point    uint                  `gorm:"not null"`
-	Profile  Profile               `gorm:"foreignKey:UserID"`
-	LogsFrom []Log                 `gorm:"foreignKey:FromId"`
-	LogsTo   []Log                 `gorm:"foreignKey:ToId"`
-	Game     Game                  `gorm:"foreignKey:UserID"`
 }
