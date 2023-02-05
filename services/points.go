@@ -10,9 +10,9 @@ func GrantPoint(fromId uint, toId uint, point uint) (models.User, error) {
 	db := configs.DB.GetConnection()
 	user := models.User{}
 	log := models.Log{
-		From:  fromId,
-		To:    toId,
-		Point: point,
+		FromId: fromId,
+		ToId:   toId,
+		Point:  point,
 	}
 
 	if err := db.First(&user, models.User{Model: gorm.Model{ID: toId}}).Error; err != nil {
