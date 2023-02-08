@@ -76,3 +76,26 @@ func FindUserHandler(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, response)
 }
+
+func GetAllStartupHandler(c echo.Context) error {
+	db := configs.DB.GetConnection()
+	response := models.Response[[]UserResponse]{}
+
+	result := []models.User{}
+	request := models.User{Role: types.Startup}
+	if err := db.Where(&request).Find(&result).Error; err != nil {
+		response.Message = "ERROR: INTERNAL SERVER ERROR"
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	for _, user := range result {
+		userResponse := UserResponse {
+			Name: user.Name,
+			Username: user.Username,
+			Usercode: user.Usercode,
+		}
+		response.Data = append(response.Data, userResponse)
+	}
+	response.Message = "SUCCESS"
+	return c.JSON(http.StatusOK, response)
+}

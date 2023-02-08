@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"itfest-backend-2.0/configs"
@@ -13,6 +14,10 @@ type AddMerchandiseRequest struct {
 	Name  string `json:"name" form:"name" query:"name" validate:"required"`
 	Stock uint   `json:"stock" form:"stock" query:"stock" validate:"required,min=0"`
 	Point uint   `json:"point" form:"point" query:"point" validate:"required,min=1"`
+}
+
+type DeleteMerchandiseRequest struct {
+	ID uint `json:"id" form:"id" query:"id" validate:"required"`
 }
 
 type MerchandiseOrder struct {
@@ -94,6 +99,32 @@ func GetMerchandiseHandler(c echo.Context) error {
 	response.Data = merch
 
 	return c.JSON(http.StatusOK, response)
+}
+
+func DeleteMerchandiseHandler(c echo.Context) error {
+	db := configs.DB.GetConnection()
+
+	role := c.Get("role").(types.Role)
+	response := models.Response[string]{}
+
+	if role != types.Admin {
+		response.Message = "FORBIDDEN"
+		return c.JSON(http.StatusUnauthorized, response)
+	}
+
+	dmRequest := DeleteMerchandiseRequest{}
+	if err := c.Bind(&dmRequest); err != nil {
+		response.Message = "ERROR: BAD REQUEST"
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	if err := db.Delete(&models.Merchandise{}, dmRequest.ID).Error; err != nil {
+		response.Message = "ERROR: FAILED TO DELETE MERCHANDISE"
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response.Message = "SUCCESS: Delete Merchandise With ID:" + strconv.Itoa(int(dmRequest.ID))
+	return c.JSON(http.StatusCreated, response)
 }
 
 func CheckoutHandler(c echo.Context) error {

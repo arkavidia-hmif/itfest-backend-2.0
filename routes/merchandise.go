@@ -8,7 +8,8 @@ import (
 
 func MerchandiseRoute(e *echo.Echo) {
 	e.GET("/getAllMerchandise", controllers.GetAllMerchandiseHandler, middlewares.AuthMiddleware)
-	e.GET("/getMerchandise/:id", controllers.GetMerchandiseHandler, middlewares.AuthMiddleware) // TODO: Make Sure Query Param Comply with API Contract
+	e.GET("/getMerchandise/:id", controllers.GetMerchandiseHandler, middlewares.AuthMiddleware)
 	e.POST("/checkout", controllers.CheckoutHandler, middlewares.AuthMiddleware)
 	e.POST("/addMerchandise", controllers.AddMerchandiseHandler, middlewares.AuthMiddleware)
+	e.POST("/deleteMerchandise", controllers.DeleteMerchandiseHandler, middlewares.AuthMiddleware)
 }
