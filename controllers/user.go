@@ -59,11 +59,21 @@ func FindUserHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
+	if len(request.Usercode) != 6 {
+		response.Message = "ERROR: BAD REQUEST, USERCODE MUST BE 6 DIGITS"
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
 	result := models.User{}
 	condition := models.User{Usercode: request.Usercode}
 	if err := db.Where(&condition).Find(&result).Error; err != nil {
 		response.Message = "ERROR: INTERNAL SERVER ERROR"
 		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	if result.Name == "" {
+		response.Message = "USER NOT FOUND"
+		return c.JSON(http.StatusNotFound, response)
 	}
 
 	response.Message = "SUCCESS"
