@@ -11,9 +11,10 @@ import (
 )
 
 type AddMerchandiseRequest struct {
-	Name  string `json:"name" form:"name" query:"name" validate:"required"`
-	Stock uint   `json:"stock" form:"stock" query:"stock" validate:"required,min=0"`
-	Point uint   `json:"point" form:"point" query:"point" validate:"required,min=1"`
+	Name     string `json:"name" form:"name" query:"name" validate:"required"`
+	Stock    uint   `json:"stock" form:"stock" query:"stock" validate:"required,min=0"`
+	Point    uint   `json:"point" form:"point" query:"point" validate:"required,min=1"`
+	Usercode string `json:"usercode" form:"usercode" query:"usercode" validate:"required"`
 }
 
 type DeleteMerchandiseRequest struct {
@@ -52,9 +53,10 @@ func AddMerchandiseHandler(c echo.Context) error {
 
 	db := configs.DB.GetConnection()
 	merchandise := models.Merchandise{
-		Name:  newMerchandise.Name,
-		Stock: newMerchandise.Stock,
-		Point: newMerchandise.Point,
+		Name:     newMerchandise.Name,
+		Stock:    newMerchandise.Stock,
+		Point:    newMerchandise.Point,
+		Usercode: newMerchandise.Usercode,
 	}
 
 	if err := db.Create(&merchandise).Error; err != nil {
@@ -73,7 +75,7 @@ func GetAllMerchandiseHandler(c echo.Context) error {
 	db := configs.DB.GetConnection()
 	merchs := []models.Merchandise{}
 
-	if err := db.Find(&merchs).Error; err != nil {
+	if err := db.Find(&merchs).Joins("left join users on users.usercode = merchandises.usercode").Error; err != nil {
 		response.Message = "ERROR: FAILED TO GET ALL MERCH"
 		return c.JSON(http.StatusBadRequest, response)
 	}
