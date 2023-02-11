@@ -24,20 +24,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtM
 
 GET http://localhost:8080/getAllMerchandise
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM2MzQyLCJpZCI6MTUsInJvbGUiOiJ1c2VyIn0.WeFUXrO88Ag8LHHSFxHSmPtKi4Hc6w5nGSlMj6x1S0s
+Authorization: Bearer {{}}
 
 ###
 
 GET http://localhost:8080/getMerchandise/id=1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM2MzQyLCJpZCI6MTUsInJvbGUiOiJ1c2VyIn0.WeFUXrO88Ag8LHHSFxHSmPtKi4Hc6w5nGSlMj6x1S0s
+Authorization: Bearer {{}}
 
 
 ###
 
 POST http://localhost:8080/checkout
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM3ODMyLCJpZCI6Mywicm9sZSI6ImFkbWluIn0.4KBB9wrZQ8Va1T17b2VJdKBjieRYbCDRnjBPyjGLYZw
+Authorization: Bearer {{}}
 
 {
   "to": "022834",

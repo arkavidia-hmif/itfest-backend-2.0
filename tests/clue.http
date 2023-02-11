@@ -1,18 +1,18 @@
 GET http://localhost:8080/getClue
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM2MzQyLCJpZCI6MTUsInJvbGUiOiJ1c2VyIn0.WeFUXrO88Ag8LHHSFxHSmPtKi4Hc6w5nGSlMj6x1S0s
+Authorization: Bearer {{}}
 
 ### 
 
 GET http://localhost:8080/getTries
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTMyODA0LCJpZCI6MTAsInJvbGUiOiIifQ.etC2Sw5j_87GcDLlQqVri2KiAsqZZmDsDFnsiBSNkfc
+Authorization: Bearer {{}}
 
 ###
 
 POST http://localhost:8080/submitClue
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM2MzQyLCJpZCI6MTUsInJvbGUiOiJ1c2VyIn0.WeFUXrO88Ag8LHHSFxHSmPtKi4Hc6w5nGSlMj6x1S0s
+Authorization: Bearer {{}}
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 
 POST http://localhost:8080/createClue
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM1MDQ5LCJpZCI6Mywicm9sZSI6ImFkbWluIn0.SM6Rbj34I-WF3xDV9pbmr8IX6f_oL0C5F3MQ3jMURmk
+Authorization: Bearer {{}}
 Content-Type: application/json
 
 {
