@@ -18,7 +18,7 @@ type Database struct {
 func (database *Database) lazyInit() {
 	database.once.Do(func() {
 		host := os.Getenv("HOST")
-		port := os.Getenv("PORT")
+		port := os.Getenv("DBPORT")
 		dbname := os.Getenv("DBNAME")
 		username := os.Getenv("USERNAME")
 		password := os.Getenv("PASSWORD")
