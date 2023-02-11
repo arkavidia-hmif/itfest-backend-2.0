@@ -1,31 +1,31 @@
 package api
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	con "itfest-backend-2.0/controllers"
+	"itfest-backend-2.0/configs"
+	"itfest-backend-2.0/middlewares"
+	"itfest-backend-2.0/routes"
 )
 
 func Run() {
 	e := echo.New()
 
-	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middlewares.Cors())
 
-	// CORS
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE},
-	}))
+	e.Validator = &configs.RequestValidator{Validator: validator.New()}
 
-	// Declare new controller
-	exampleCon := con.NewExampleController()
+	routes.LoginRoute(e)
+	routes.RegisterRoute(e)
+	routes.UserRoute(e)
+	routes.ProfileRoute(e)
+	routes.ClueRoute(e)
+	routes.PointsRoute(e)
+	routes.MerchandiseRoute(e)
 
-	// Routes
-	e.GET("/example", exampleCon.GetHelloWorld)
-
-	// Start server
 	port := "8080"
 	e.Logger.Fatal(e.Start(":" + port))
 }

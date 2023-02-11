@@ -1,0 +1,8 @@
+POST https://itfest-dev.onrender.com/register
+Content-Type: application/json
+
+{
+  "name" : "",
+  "username" : "",
+  "password" : ""
+}

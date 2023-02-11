@@ -1,0 +1,48 @@
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username" : "itfest-admin",
+  "password" : "itfest-admin"
+}
+
+> {% client.global.set("auth_token", response.body.data); %}
+
+###
+
+POST http://localhost:8080/addMerchandise
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpdGZlc3QtMi4wIiwiZXhwIjoxNjc1NTM3ODMyLCJpZCI6Mywicm9sZSI6ImFkbWluIn0.4KBB9wrZQ8Va1T17b2VJdKBjieRYbCDRnjBPyjGLYZw
+
+{
+  "name": "Jaket Arkavidia",
+  "stock": 10,
+  "point": 2000
+}
+
+###
+
+GET http://localhost:8080/getAllMerchandise
+Content-Type: application/json
+Authorization: Bearer {{}}
+
+###
+
+GET http://localhost:8080/getMerchandise/id=1
+Content-Type: application/json
+Authorization: Bearer {{}}
+
+
+###
+
+POST http://localhost:8080/checkout
+Content-Type: application/json
+Authorization: Bearer {{}}
+
+{
+  "to": "022834",
+  "payload": [
+    { "merch_id": 1,
+      "quantity": 1 }
+  ]
+}

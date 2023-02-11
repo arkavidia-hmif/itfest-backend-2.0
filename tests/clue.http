@@ -1,0 +1,32 @@
+GET http://localhost:8080/getClue
+Accept: application/json
+Authorization: Bearer {{}}
+
+### 
+
+GET http://localhost:8080/getTries
+Accept: application/json
+Authorization: Bearer {{}}
+
+###
+
+POST http://localhost:8080/submitClue
+Accept: application/json
+Authorization: Bearer {{}}
+Content-Type: application/json
+
+{
+    "code": "352456"
+}
+
+###
+
+POST http://localhost:8080/createClue
+Accept: application/json
+Authorization: Bearer {{}}
+Content-Type: application/json
+
+{
+    "usercode" : "085352",
+    "text": "tokopaedi"
+}
