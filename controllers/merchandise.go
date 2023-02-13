@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 
@@ -75,7 +76,9 @@ func GetAllMerchandiseHandler(c echo.Context) error {
 	db := configs.DB.GetConnection()
 	merchs := []models.Merchandise{}
 
-	if err := db.Find(&merchs).Joins("left join users on users.usercode = merchandises.usercode").Error; err != nil {
+	if err := db.Preload("User", func(d *gorm.DB) *gorm.DB {
+		return d.Select("Name", "Usercode", "ID")
+	}).Find(&merchs).Error; err != nil {
 		response.Message = "ERROR: FAILED TO GET ALL MERCH"
 		return c.JSON(http.StatusBadRequest, response)
 	}
@@ -92,7 +95,9 @@ func GetMerchandiseHandler(c echo.Context) error {
 	db := configs.DB.GetConnection()
 	merch := models.Merchandise{}
 
-	if err := db.First(&merch, c.Param("id")).Error; err != nil {
+	if err := db.Preload("User", func(d *gorm.DB) *gorm.DB {
+		return d.Select("Name", "Usercode", "ID")
+	}).First(&merch, c.Param("id")).Error; err != nil {
 		response.Message = "ERROR: FAILED TO GET MERCH"
 		return c.JSON(http.StatusBadRequest, response)
 	}
