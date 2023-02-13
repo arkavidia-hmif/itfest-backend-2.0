@@ -8,4 +8,5 @@ type Merchandise struct {
 	Stock    uint   `json:"stock"`
 	Point    uint   `json:"point"`
 	Usercode string `json:"usercode"`
+	User     User   `gorm:"foreignKey:Usercode;references:Usercode" json:"user"`
 }
