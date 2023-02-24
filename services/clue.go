@@ -47,8 +47,9 @@ func GetRandomClueIdByGame(game models.Game) (uint, error) {
 	db := configs.DB.GetConnection()
 
 	// get all clue rows
-	clue := db.First(&models.Clue{})
-	rows := int(clue.RowsAffected) + 1
+	var count int64
+	db.Model(&models.Clue{}).Count(&count)
+	rows := int(count)
 
 	cluesDone := game.CluesDone
 	fmt.Println(cluesDone)
